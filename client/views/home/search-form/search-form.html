@@ -1,0 +1,18 @@
+<template name="searchForm">
+  {{#if currentUser}}
+    <form class="search-form">
+      <div class="input-group">
+        <input type="text" class="form-control input-lg" name="query" placeholder="Search" disabled="{{disabled}}" required>
+        <span class="input-group-btn">
+          <button class="btn btn-default btn-lg" type="submit" disabled="{{disabled}}">
+            <i class="fa fa-lg fa-fw fa-search"></i>
+          </button>
+        </span>
+      </div>
+    </form>
+  {{else}}
+    <div class="alert alert-info">
+      <i class="fa fa-lg fa-fw fa-warning"></i> <strong>Please login to start exploring venues.</strong>
+    </div>
+  {{/if}}
+</template>

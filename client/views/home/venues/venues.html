@@ -1,0 +1,36 @@
+<template name="venues">
+  {{#if hasCurrentVenues}}
+    <div class="venues">
+      <div class="venues-header">
+        {{#with currentQuery}}
+          {{#linkTo route="queries-export-csv" class="btn btn-default pull-right" target="_blank" download=""}}
+            <i class="fa fa-fw fa-file-text-o"></i> Export as CSV
+          {{/linkTo}}
+        {{/with}}
+        <h2>{{currentVenuesCount}}</h2>
+      </div>
+      <table class="table table-striped">
+        <thead>
+          <tr class="info">
+            <th>Name</th>
+            <th>City</th>
+            <th>Street Address</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{#each currentVenues}}
+            <tr>
+              <td>{{name}}</td>
+              <td>{{city}}</td>
+              <td>{{address}}</td>
+              <td>{{latFormatted}}</td>
+              <td>{{lngFormatted}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/if}}
+</template>

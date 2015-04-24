@@ -1,0 +1,13 @@
+<template name="venueAddress">
+  {{name}}<br>
+  {{address}}<br>
+  {{city}}
+</template>
+
+<template name="map">
+  <div class="map embed-responsive embed-responsive-16by9">
+    <div class="embed-responsive-item">
+      {{> GoogleMaps options=googleMapsOptions}}
+    </div>
+  </div>
+</template>

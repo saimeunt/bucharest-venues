@@ -1,0 +1,24 @@
+<template name="queries">
+  {{#if queries}}
+    <div class="queries">
+      <table class="table table-striped table-hover">
+        <tbody>
+          {{#each queries}}
+            <tr class="{{success}}">
+              <td>
+                <button type="button" class="remove-query-button btn btn-danger btn-xs">
+                  <i class="fa fa-fw fa-trash-o"></i>
+                </button>
+              </td>
+              <td>{{query}}</td>
+              <td>{{latFormatted}}</td>
+              <td>{{lngFormatted}}</td>
+              <td>{{radiusFormatted}}</td>
+              <td>{{dateFormatted}}</td>
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
+  {{/if}}
+</template>
