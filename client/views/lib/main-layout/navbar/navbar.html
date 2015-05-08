@@ -1,4 +1,39 @@
 <template name="navbar">
+	<div class="navbar ui fixed borderless menu">
+		<div class="ui page grid">
+			<div class="column">
+				{{#linkTo route="home" class="item"}}
+					<i class="ro flag"></i> Bucharest <strong>Venues</strong>
+				{{/linkTo}}
+				{{> userMenu}}
+			</div>
+		</div>
+	</div>
+</template>
+
+<template name="userMenu">
+	<div class="right menu">
+		{{#if currentUser}}
+			<div class="ui simple dropdown item">
+	      {{currentUser.profile.name}}
+	      <i class="dropdown icon"></i>
+	      <div class="menu">
+	        <div class="js-logout item">
+						<i class="sign out icon"></i> Logout
+					</div>
+	      </div>
+	    </div>
+		{{else}}
+			<div class="item">
+				<button class="js-login ui {{disabled}} google plus labeled icon button">
+					<i class="google plus icon"></i> Login with Google
+				</button>
+			</div>
+		{{/if}}
+	</div>
+</template>
+
+<template name="navbarBootstrap">
 	<nav class="navbar navbar-default navbar-inverse navbar-fixed-top" role="navigation">
 		<div class="container">
 			<div class="navbar-header">

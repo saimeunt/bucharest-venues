@@ -31,19 +31,15 @@ meteor remove autopublish
 # STANDARD
 meteor add service-configuration
 meteor add accounts-google
-meteor add accounts-ui
-meteor add less
 meteor add http
 # ATMOSPHERE
-#
+meteor add flemay:less-autoprefixer
+meteor add iron:router
+meteor add semantic:ui
 # CUSTOM
-meteor add bootstrap-less
-meteor add bootswatch-less
 meteor add csv
-meteor add font-awesome-less
 meteor add google-maps-view
 meteor add moment-with-locales
-meteor add router-utilities
 
 # test launching using meteor
 cd ~/meteor/$APPLICATION_NAME-meteor

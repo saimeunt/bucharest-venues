@@ -9,7 +9,6 @@ Template.venues.helpers({
   hasCurrentVenues: function() {
     return currentVenues().count() > 0;
   },
-  currentVenues: currentVenues,
   currentVenuesCount: function() {
     function pluralize(count, label) {
       label += count == 1 ? "" : "s";
@@ -20,7 +19,11 @@ Template.venues.helpers({
   currentQuery: function() {
     var currentQueryId = Router.current().state.get("currentQueryId");
     return Queries.findOne(currentQueryId);
-  },
+  }
+});
+
+Template.venuesTable.helpers({
+  currentVenues: currentVenues,
   latFormatted: function() {
     return this.lat.toFixed(6);
   },

@@ -1,4 +1,60 @@
 <template name="queries">
+  {{#if currentUser}}
+    <div class="ui segment">
+      {{#if hasQueries}}
+        {{> queriesTable}}
+      {{/if}}
+      {{> queriesForm}}
+    </div>
+  {{else}}
+    <div class="ui large icon info message">
+      <i class="info circle icon"></i>
+      <div class="content">
+        <div class="header">Welcome to Bucharest Venues !</div>
+        <p>Please login to start exploring venues.</p>
+      </div>
+    </div>
+  {{/if}}
+</template>
+
+<template name="queriesTable">
+  <table class="queries-table ui table striped">
+    <thead>
+      <th><i class="marker icon"></i> Name</th>
+      <th>Latitude</th>
+      <th>Longitude</th>
+      <th>Radius</th>
+      <th>Date</th>
+    </thead>
+    <tbody>
+      {{#each queries}}
+        <tr class="js-select-row {{active}}">
+          <td>
+            <i class="js-remove-query trash icon"></i>
+            {{query}}
+          </td>
+          <td>{{latFormatted}}</td>
+          <td>{{lngFormatted}}</td>
+          <td>{{radiusFormatted}}</td>
+          <td>{{dateFormatted}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+</template>
+
+<template name="queriesForm">
+  <form class="search-form ui form">
+    <div class="ui action input">
+      <input type="text" name="query" placeholder="Search...">
+      <button class="ui primary button" type="submit">
+        <i class="search icon"></i>
+      </button>
+    </div>
+  </form>
+</template>
+
+<template name="queriesBootstrap">
   {{#if queries}}
     <div class="queries">
       <table class="table table-striped table-hover">
