@@ -1,5 +1,7 @@
 <template name="home">
-	{{> queries}}
-  {{> map}}
-	{{> venues}}
+	{{#with userQueries}}
+		{{> queries}}
+  	{{> map}}
+		{{> venues}}
+	{{/with}}
 </template>

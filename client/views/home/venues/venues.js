@@ -1,33 +1,42 @@
-function currentVenues() {
-  var currentQueryId = Router.current().state.get("currentQueryId");
-  return Venues.find({
-    queryId: currentQueryId
-  });
-}
+Template.venues.onCreated(function venuesCreated() {
+  this.currentVenues = () => {
+    const currentQueryId = FlowRouter.getQueryParam('query');
+    return Venues.find({
+      queryId: currentQueryId,
+    });
+  };
+});
 
 Template.venues.helpers({
-  hasCurrentVenues: function() {
-    return currentVenues().count() > 0;
+  hasCurrentVenues() {
+    return Template.instance().currentVenues().count() > 0;
   },
-  currentVenuesCount: function() {
+  currentVenuesCount() {
     function pluralize(count, label) {
-      label += count == 1 ? "" : "s";
-      return count + " " + label;
+      const plural = count === 1 ? '' : 's';
+      return `${count} ${label}${plural}`;
     }
-    return pluralize(currentVenues().count(), "venue");
+    const currentVenuesCount = Template.instance().currentVenues().count();
+    return pluralize(currentVenuesCount, 'venue');
   },
-  currentQuery: function() {
-    var currentQueryId = Router.current().state.get("currentQueryId");
-    return Queries.findOne(currentQueryId);
-  }
+  exportUrl() {
+    const currentQueryId = FlowRouter.getQueryParam('query');
+    return `/queries/${currentQueryId}/export-csv`;
+  },
+});
+
+Template.venuesTable.onCreated(function venuesTableCreated() {
+  this.venues = this.view.parentView.parentView._templateInstance;
 });
 
 Template.venuesTable.helpers({
-  currentVenues: currentVenues,
-  latFormatted: function() {
+  currentVenues() {
+    return Template.instance().venues.currentVenues();
+  },
+  latFormatted() {
     return this.lat.toFixed(6);
   },
-  lngFormatted: function() {
+  lngFormatted() {
     return this.lng.toFixed(6);
-  }
+  },
 });

@@ -1,15 +1,15 @@
 <template name="venues">
   {{#if hasCurrentVenues}}
-    <div class="ui top attached segment">
-      {{#with currentQuery}}
-        {{#linkTo route="queries-export-csv" class="ui right floated basic button" target="_blank" }}
+    <div class="venues">
+      <div class="ui top attached clearing segment">
+        <a href="{{exportUrl}}" class="ui right floated basic button" target="_blank">
           <i class="file text outline icon"></i> Export as CSV
-        {{/linkTo}}
-      {{/with}}
-      <h2 class="ui left floated header">{{currentVenuesCount}}</h2>
-    </div>
-    <div class="ui bottom attached segment">
-      {{> venuesTable}}
+        </a>
+        <h2 class="ui left floated header">{{currentVenuesCount}}</h2>
+      </div>
+      <div class="ui bottom attached segment">
+        {{> venuesTable}}
+      </div>
     </div>
   {{/if}}
 </template>
@@ -37,41 +37,4 @@
       {{/each}}
     </tbody>
   </table>
-</template>
-
-<template name="venuesBootstrap">
-  {{#if hasCurrentVenues}}
-    <div class="venues">
-      <div class="venues-header">
-        {{#with currentQuery}}
-          {{#linkTo route="queries-export-csv" class="btn btn-default pull-right" target="_blank" }}
-            <i class="fa fa-fw fa-file-text-o"></i> Export as CSV
-          {{/linkTo}}
-        {{/with}}
-        <h2>{{currentVenuesCount}}</h2>
-      </div>
-      <table class="table table-striped">
-        <thead>
-          <tr class="info">
-            <th>Name</th>
-            <th>City</th>
-            <th>Street Address</th>
-            <th>Latitude</th>
-            <th>Longitude</th>
-          </tr>
-        </thead>
-        <tbody>
-          {{#each currentVenues}}
-            <tr>
-              <td>{{name}}</td>
-              <td>{{city}}</td>
-              <td>{{address}}</td>
-              <td>{{latFormatted}}</td>
-              <td>{{lngFormatted}}</td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  {{/if}}
 </template>

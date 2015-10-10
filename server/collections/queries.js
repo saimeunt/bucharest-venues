@@ -1,28 +1,31 @@
-Meteor.publish("userQueries", function() {
+Meteor.publish('userQueries', function userQueries() {
   return Queries.find({
-    userId: this.userId
+    userId: this.userId,
   });
 });
 
-exportQueryAsCSV = function(queryId, response) {
-  var query = Queries.findOne(queryId);
+Picker.route('/queries/:_id/export-csv', (params, request, response,/* next*/) => {
+  const query = Queries.findOne(params._id);
+  const date = moment(query.date).format('YYYY-MM-DD');
+  const filename = `${date}-${query._id}.csv`;
+  response.writeHead(200, {
+    'Content-type': 'text/csv',
+    'Content-Disposition': `attachment; filename=${filename}`,
+  });
   //
-  var filename = moment(query.date).format("YYYY-MM-DD") + "-" + query._id + ".csv";
-  response.setHeader("Content-Disposition", "attachment; filename=" + filename);
-  //
-  var venues = Venues.find({
-    queryId: query._id
+  const venues = Venues.find({
+    queryId: query._id,
   }).fetch();
   //
-  var csvString = csv.stringifySync(venues, {
+  const csvString = csv.stringifySync(venues, {
     columns: {
-      name: "Name",
-      city: "City",
-      address: "Street Address",
-      lat: "Latitude",
-      lng: "Longitude"
+      name: 'Name',
+      city: 'City',
+      address: 'Street Address',
+      lat: 'Latitude',
+      lng: 'Longitude',
     },
-    header: true
+    header: true,
   });
   response.end(csvString);
-};
+});

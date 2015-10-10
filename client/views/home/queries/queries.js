@@ -1,81 +1,93 @@
 Template.queries.helpers({
-  hasQueries: function() {
+  hasQueries() {
     return this.queries.count() > 0;
-  }
+  },
 });
 
 Template.queriesTable.helpers({
-  latFormatted: function() {
+  latFormatted() {
     return this.lat.toFixed(6);
   },
-  lngFormatted: function() {
+  lngFormatted() {
     return this.lng.toFixed(6);
   },
-  radiusFormatted: function() {
-    var km = this.radius / 1000;
-    return km.toFixed(1) + "km";
+  radiusFormatted() {
+    const km = this.radius / 1000;
+    const kmFixed = km.toFixed(1);
+    return `${kmFixed}km`;
   },
-  dateFormatted: function() {
-    return moment(this.date).format("MMM Do, HH:mm");
+  dateFormatted() {
+    return moment(this.date).format('MMM Do, HH:mm');
   },
-  active: function() {
-    var active = Router.current().state.equals("currentQueryId", this._id);
-    return active ? "active" : "";
-  }
+  active() {
+    const currentQueryId = FlowRouter.getQueryParam('query');
+    const active = currentQueryId === this._id;
+    return active ? 'active' : '';
+  },
 });
 
 Template.queriesTable.events({
-  "click .js-remove-query": function() {
-    if (Router.current().state.equals("currentQueryId", this._id)) {
-      Router.current().state.set("currentQueryId", null);
+  'click .js-remove-query'() {
+    const currentQueryId = FlowRouter.getQueryParam('query');
+    if (currentQueryId === this._id) {
+      FlowRouter.setQueryParams({
+        query: null,
+      });
     }
-    Meteor.call("removeQuery", this._id, function(error) {
+    Meteor.call('removeQuery', this._id, error => {
       if (error) {
         console.log(error);
         return;
       }
     });
   },
-  "click .js-select-row": function() {
-    Router.current().state.set("currentQueryId", this._id);
-  }
+  'click .js-select-row'() {
+    FlowRouter.setQueryParams({
+      query: this._id,
+    });
+  },
 });
 
-function getCurrentRadius(map) {
-  var bounds = map.getBounds();
-  var swPoint = bounds.getSouthWest();
-  var nePoint = bounds.getNorthEast();
-  //
-  var distance = google.maps.geometry.spherical.computeDistanceBetween(swPoint, nePoint);
-  var hypotenuse = distance / 2;
-  return hypotenuse / 2;
-}
+Template.queriesForm.onCreated(function queriesFormCreated() {
+  this.getCurrentRadius = (map) => {
+    const bounds = map.getBounds();
+    const swPoint = bounds.getSouthWest();
+    const nePoint = bounds.getNorthEast();
+    //
+    const distance = google.maps.geometry.spherical.computeDistanceBetween(swPoint, nePoint);
+    const hypotenuse = distance / 2;
+    return hypotenuse / 2;
+  };
+});
 
 Template.queriesForm.events({
-  "submit": function(event, template) {
+  'submit'(event, template) {
     event.preventDefault();
     //
-    var map = GoogleMapsAPI.map("venuesMap");
+    const map = GoogleMapsAPI.map('venuesMap');
     //
-    var center = map.getCenter();
-    var radius = getCurrentRadius(map);
+    const center = map.getCenter();
+    const radius = template.getCurrentRadius(map);
     //
-    var query = {
-      query: template.$("[name='query']").val(),
+    const query = {
+      query: template.$('[name="query"]').val(),
       lat: center.lat(),
       lng: center.lng(),
-      radius: radius
+      radius,
+      zoom: map.zoom,
     };
     //
-    Meteor.call("insertQuery", query, function(error, queryId) {
+    Meteor.call('insertQuery', query, (error, queryId) => {
       if (error) {
         console.log(error);
         return;
       }
       //
-      Router.current().state.set("currentQueryId", queryId);
+      FlowRouter.setQueryParams({
+        query: queryId,
+      });
     });
     //
-    template.find("form").reset();
-  }
+    template.find('form').reset();
+  },
 });

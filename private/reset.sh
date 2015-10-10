@@ -29,17 +29,21 @@ meteor remove autopublish
 
 # add app specific packages
 # STANDARD
+meteor add check
 meteor add service-configuration
 meteor add accounts-google
 meteor add http
 # ATMOSPHERE
-meteor add flemay:less-autoprefixer
-meteor add iron:router
+meteor add kadira:flow-router
+meteor add kadira:blaze-layout
 meteor add semantic:ui
+meteor add flemay:less-autoprefixer
+meteor add meteorhacks:picker
 # CUSTOM
 meteor add csv
 meteor add google-maps-view
 meteor add moment-with-locales
+meteor add flow-router-helpers
 
 # test launching using meteor
 cd ~/meteor/$APPLICATION_NAME-meteor

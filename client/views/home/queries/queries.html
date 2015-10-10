@@ -1,6 +1,6 @@
 <template name="queries">
   {{#if currentUser}}
-    <div class="ui segment">
+    <div class="queries ui segment">
       {{#if hasQueries}}
         {{> queriesTable}}
       {{/if}}
@@ -45,36 +45,11 @@
 
 <template name="queriesForm">
   <form class="search-form ui form">
-    <div class="ui action input">
+    <div class="ui fluid action input">
       <input type="text" name="query" placeholder="Search...">
       <button class="ui primary button" type="submit">
         <i class="search icon"></i>
       </button>
     </div>
   </form>
-</template>
-
-<template name="queriesBootstrap">
-  {{#if queries}}
-    <div class="queries">
-      <table class="table table-striped table-hover">
-        <tbody>
-          {{#each queries}}
-            <tr class="{{success}}">
-              <td>
-                <button type="button" class="remove-query-button btn btn-danger btn-xs">
-                  <i class="fa fa-fw fa-trash-o"></i>
-                </button>
-              </td>
-              <td>{{query}}</td>
-              <td>{{latFormatted}}</td>
-              <td>{{lngFormatted}}</td>
-              <td>{{radiusFormatted}}</td>
-              <td>{{dateFormatted}}</td>
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
-    </div>
-  {{/if}}
 </template>

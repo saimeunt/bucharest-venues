@@ -1,70 +1,72 @@
-Template.map.onCreated(function() {
-  this.name = "venuesMap";
+Template.map.onCreated(function mapCreated() {
+  this.name = 'venuesMap';
   this.markers = {};
+  //
+  this.createMarker = (map, venue) => {
+    const marker = new google.maps.Marker({
+      map,
+      position: new google.maps.LatLng(venue.lat, venue.lng),
+      title: venue.name,
+    });
+    const infoWindow = new google.maps.InfoWindow({
+      content: Blaze.toHTMLWithData(Template.venueAddress, venue),
+    });
+    google.maps.event.addListener(marker, 'click', () => {
+      infoWindow.open(map, marker);
+    });
+    google.maps.event.addListener(marker, 'visible_changed', () => {
+      infoWindow.close();
+    });
+    return marker;
+  };
 });
 
-function createMarker(map, venue) {
-  var marker = new google.maps.Marker({
-    map: map,
-    position: new google.maps.LatLng(venue.lat, venue.lng),
-    title: venue.name
-  });
-  var content = Blaze.toHTMLWithData(Template.venueAddress, venue);
-  var infoWindow = new google.maps.InfoWindow({
-    content: content
-  });
-  google.maps.event.addListener(marker, "click", function() {
-    infoWindow.open(map, marker);
-  });
-  google.maps.event.addListener(marker, "visible_changed", function() {
-    infoWindow.close();
-  });
-  return marker;
-}
-
-Template.map.onRendered(function() {
-  this.autorun(function() {
-    var map = GoogleMapsAPI.map(this.name);
+Template.map.onRendered(function mapRendered() {
+  this.autorun(() => {
+    const map = GoogleMapsAPI.map(this.name);
     if (!map) {
       return;
     }
     //
-    _.each(this.markers, function(marker) {
+    _.each(this.markers, marker => {
       marker.setVisible(false);
     });
     //
-    var currentQueryId = Router.current().state.get("currentQueryId");
-    var query = Queries.findOne(currentQueryId);
-    var ready = query && query.ready;
+    const currentQueryId = FlowRouter.getQueryParam('query');
+    const query = Queries.findOne(currentQueryId);
+    const ready = query && query.ready;
     if (!ready) {
       return;
     }
     // set proper bounds
-    var sw = new google.maps.LatLng(query.suggestedBounds.sw.lat, query.suggestedBounds.sw.lng);
-    var ne = new google.maps.LatLng(query.suggestedBounds.ne.lat, query.suggestedBounds.ne.lng);
-    var bounds = new google.maps.LatLngBounds(sw, ne);
-    map.fitBounds(bounds);
+    /* const sw = new google.maps.LatLng(query.suggestedBounds.sw.lat, query.suggestedBounds.sw.lng);
+    const ne = new google.maps.LatLng(query.suggestedBounds.ne.lat, query.suggestedBounds.ne.lng);
+    const bounds = new google.maps.LatLngBounds(sw, ne);
+    map.fitBounds(bounds);*/
+    const center = new google.maps.LatLng(query.lat, query.lng);
+    map.setCenter(center);
+    map.setZoom(query.zoom);
     //
     Venues.find({
-      queryId: currentQueryId
-    }).forEach(function(venue) {
+      queryId: currentQueryId,
+    }).forEach(venue => {
       if (this.markers[venue._id]) {
         this.markers[venue._id].setVisible(true);
       } else {
-        this.markers[venue._id] = createMarker(map, venue);
+        this.markers[venue._id] = this.createMarker(map, venue);
       }
-    }.bind(this));
-  }.bind(this));
+    });
+  });
 });
 
 Template.map.helpers({
-  googleMapsOptions: function() {
+  googleMapsOptions() {
     return {
       name: Template.instance().name,
       center: {
         lat: 44.4268,
-        lng: 26.1025
-      }
+        lng: 26.1025,
+      },
     };
-  }
+  },
 });
